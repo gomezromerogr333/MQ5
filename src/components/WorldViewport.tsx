@@ -115,7 +115,7 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({
         style={{ top: 'calc(0.75rem + env(safe-area-inset-top, 0px))' }}
       >
         {/* Left: Current World or Map Badge */}
-        <div className="flex items-center gap-2 bg-slate-900/85 backdrop-blur-md border border-slate-700/80 px-3 py-1.5 rounded-full text-xs font-bold text-slate-200 shadow-lg">
+        <div className="flex items-center gap-2 bg-slate-900/85 backdrop-blur-md border border-slate-700/80 px-3 py-1.5 pointer-coarse:min-h-10 rounded-full text-xs font-bold text-slate-200 shadow-lg">
           {viewMode === 'map' ? (
             <>
               <Compass className="w-3.5 h-3.5 text-blue-400" />
@@ -135,7 +135,7 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({
           {/* Weather Status & Intensity Control */}
           <button
             onClick={handleCycleWeather}
-            className={`hidden sm:flex items-center gap-1.5 bg-slate-900/90 hover:bg-slate-800 border px-3 py-1.5 rounded-full text-xs font-bold transition-all shadow-lg active:scale-95 cursor-pointer backdrop-blur-md ${
+            className={`hidden sm:flex items-center gap-1.5 bg-slate-900/90 hover:bg-slate-800 border px-3 py-1.5 pointer-coarse:min-h-10 rounded-full text-xs font-bold transition-all shadow-lg active:scale-95 cursor-pointer backdrop-blur-md ${
               weatherIntensity === 'off'
                 ? 'border-slate-700 text-slate-400 opacity-70'
                 : 'border-slate-700/80 hover:border-sky-400/60 text-slate-200'
@@ -166,7 +166,7 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({
           <button
             id="engine-toggle-btn"
             onClick={handleToggleEngine}
-            className="flex items-center gap-1.5 bg-slate-900/90 hover:bg-slate-800 text-slate-200 border border-slate-700/80 hover:border-amber-400/60 px-3 py-1.5 rounded-full text-xs font-bold transition-all shadow-lg active:scale-95 cursor-pointer"
+            className="flex items-center gap-1.5 bg-slate-900/90 hover:bg-slate-800 text-slate-200 border border-slate-700/80 hover:border-amber-400/60 px-3 py-1.5 pointer-coarse:min-h-10 rounded-full text-xs font-bold transition-all shadow-lg active:scale-95 cursor-pointer"
             title="Alterna entre el Modo 3D WebGL y el Modo Ilustrado fiel a los archivos HTML"
           >
             {engine === 'three' ? (
@@ -188,7 +188,7 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({
           <button
             id="map-game-toggle-btn"
             onClick={onToggleViewMode}
-            className="flex items-center gap-1 bg-blue-600/90 hover:bg-blue-500 text-white border border-blue-400 px-3 py-1.5 rounded-full text-xs font-bold transition-all shadow-lg active:scale-95 cursor-pointer"
+            className="flex items-center gap-1 bg-blue-600/90 hover:bg-blue-500 text-white border border-blue-400 px-3 py-1.5 pointer-coarse:min-h-10 rounded-full text-xs font-bold transition-all shadow-lg active:scale-95 cursor-pointer"
           >
             {viewMode === 'map' ? (
               <>

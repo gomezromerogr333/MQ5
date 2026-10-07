@@ -130,7 +130,7 @@ export const IllustratedWorldViewport: React.FC<IllustratedWorldViewportProps> =
   // -------------------------------------------------------------
   if (viewMode === 'map') {
     return (
-      <div className="relative w-full h-[320px] sm:h-[380px] md:h-[440px] overflow-hidden rounded-2xl border border-slate-700/80 bg-[#0c182c] select-none shadow-2xl">
+      <div className="relative w-full h-[320px] sm:h-[380px] md:h-[440px] short:h-[46dvh] overflow-hidden rounded-2xl border border-slate-700/80 bg-[#0c182c] select-none shadow-2xl">
         {/* SVG World Map */}
         <svg
           viewBox="0 0 1000 600"
@@ -396,7 +396,7 @@ export const IllustratedWorldViewport: React.FC<IllustratedWorldViewportProps> =
     const isPlayerLeading = currentMeters >= rivalMeters;
 
     return (
-      <div className="relative w-full h-[320px] sm:h-[380px] md:h-[440px] overflow-hidden rounded-2xl border border-slate-700/80 bg-gradient-to-b from-[#38bdf8]/40 via-[#1e293b] to-[#0f172a] shadow-2xl select-none flex flex-col justify-end">
+      <div className="relative w-full h-[320px] sm:h-[380px] md:h-[440px] short:h-[46dvh] overflow-hidden rounded-2xl border border-slate-700/80 bg-gradient-to-b from-[#38bdf8]/40 via-[#1e293b] to-[#0f172a] shadow-2xl select-none flex flex-col justify-end">
         {/* Sky with clouds */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-4 left-10 w-28 h-8 bg-white/20 rounded-full blur-sm animate-pulse" />
@@ -650,7 +650,7 @@ export const IllustratedWorldViewport: React.FC<IllustratedWorldViewportProps> =
   // -------------------------------------------------------------
   if (gameMode === 'battle') {
     return (
-      <div className="relative w-full h-[320px] sm:h-[380px] md:h-[440px] overflow-hidden rounded-2xl border border-slate-700/80 bg-gradient-to-b from-[#4a1d4a] via-[#1e142b] to-[#0d0914] shadow-2xl select-none flex flex-col justify-between p-4">
+      <div className="relative w-full h-[320px] sm:h-[380px] md:h-[440px] short:h-[46dvh] overflow-hidden rounded-2xl border border-slate-700/80 bg-gradient-to-b from-[#4a1d4a] via-[#1e142b] to-[#0d0914] shadow-2xl select-none flex flex-col justify-between p-4">
         {/* Floating Arena Island with Magma Cracks */}
         <div className="absolute inset-x-6 bottom-6 h-36 bg-gradient-to-b from-[#831843] via-[#701a75] to-[#4a044e] rounded-[50px] border-4 border-[#f472b6]/60 shadow-[0_25px_50px_rgba(0,0,0,0.8)] overflow-hidden">
           {/* Arena Ring with Ancient Runes */}
@@ -853,7 +853,7 @@ export const IllustratedWorldViewport: React.FC<IllustratedWorldViewportProps> =
     const isChangeProblem = !!shopData?.paidWith;
 
     return (
-      <div className="relative w-full h-[320px] sm:h-[380px] md:h-[440px] overflow-hidden rounded-2xl border border-slate-700/80 bg-gradient-to-b from-[#3b0764] via-[#1e1b4b] to-[#0f172a] shadow-2xl select-none flex flex-col justify-between p-3 sm:p-4">
+      <div className="relative w-full h-[320px] sm:h-[380px] md:h-[440px] short:h-[46dvh] overflow-hidden rounded-2xl border border-slate-700/80 bg-gradient-to-b from-[#3b0764] via-[#1e1b4b] to-[#0f172a] shadow-2xl select-none flex flex-col justify-between p-3 sm:p-4">
         {/* Marketplace Banner */}
         <div className="flex items-center justify-between bg-slate-900/85 backdrop-blur-md px-3 sm:px-4 py-2 rounded-xl border border-purple-500/40 shadow-lg">
           <div className="flex items-center gap-2">
@@ -1037,7 +1037,7 @@ export const IllustratedWorldViewport: React.FC<IllustratedWorldViewportProps> =
     const totalSegs = totalQuestions || 5;
 
     return (
-      <div className="relative w-full h-[320px] sm:h-[380px] md:h-[440px] overflow-hidden rounded-2xl border border-slate-700/80 bg-gradient-to-b from-[#0284c7]/30 via-[#0f172a] to-[#022c44] shadow-2xl select-none flex flex-col justify-between p-4">
+      <div className="relative w-full h-[320px] sm:h-[380px] md:h-[440px] short:h-[46dvh] overflow-hidden rounded-2xl border border-slate-700/80 bg-gradient-to-b from-[#0284c7]/30 via-[#0f172a] to-[#022c44] shadow-2xl select-none flex flex-col justify-between p-4">
         {/* River Progress Banner */}
         <div className="flex items-center justify-between bg-slate-900/85 backdrop-blur-md px-4 py-2 rounded-xl border border-sky-500/40 shadow-lg">
           <div className="flex items-center gap-2">
@@ -1175,7 +1175,7 @@ export const IllustratedWorldViewport: React.FC<IllustratedWorldViewportProps> =
   const unlockedCount = cluesFound || questionIndex + (isCorrect ? 1 : 0);
 
   return (
-    <div className="relative w-full h-[320px] sm:h-[380px] md:h-[440px] overflow-hidden rounded-2xl border border-slate-700/80 bg-gradient-to-b from-[#500724] via-[#1e142b] to-[#0f172a] shadow-2xl select-none flex flex-col justify-between p-4">
+    <div className="relative w-full h-[320px] sm:h-[380px] md:h-[440px] short:h-[46dvh] overflow-hidden rounded-2xl border border-slate-700/80 bg-gradient-to-b from-[#500724] via-[#1e142b] to-[#0f172a] shadow-2xl select-none flex flex-col justify-between p-4">
       {/* Citadel Banner */}
       <div className="flex items-center justify-between bg-slate-900/85 backdrop-blur-md px-4 py-2 rounded-xl border border-pink-500/40 shadow-lg">
         <div className="flex items-center gap-2">

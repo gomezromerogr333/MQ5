@@ -101,9 +101,9 @@ export const QuestionPanel: React.FC<QuestionPanelProps> = ({
   };
 
   return (
-    <div className="bg-slate-900/95 border border-slate-800/80 rounded-2xl p-3 sm:p-6 shadow-xl backdrop-blur-md flex flex-col items-center text-center relative overflow-clip">
+    <div className="bg-slate-900/95 border border-slate-800/80 rounded-2xl p-3 sm:p-6 short:p-2 tight:p-2 shadow-xl backdrop-blur-md flex flex-col items-center text-center relative overflow-clip">
       {/* Top Metadata Badges */}
-      <div className="flex flex-wrap items-center justify-center gap-2 mb-2">
+      <div className="flex flex-wrap items-center justify-center gap-2 mb-2 short:mb-1 short:gap-1">
         <span className="inline-flex items-center gap-1 bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold px-3 py-1 rounded-full">
           <Sparkles className="w-3.5 h-3.5" />
           {question.category}
@@ -198,17 +198,17 @@ export const QuestionPanel: React.FC<QuestionPanelProps> = ({
 
       {/* Math Challenge Prompt */}
       <h2
-        className={`font-extrabold tracking-tight text-white my-2 drop-shadow-sm ${
+        className={`font-extrabold tracking-tight text-white my-2 short:my-0.5 tight:my-1 drop-shadow-sm ${
           hasLongTextOptions
             ? 'text-lg sm:text-xl font-sans text-center max-w-xl'
-            : 'text-2xl sm:text-3xl md:text-4xl font-mono'
+            : 'text-2xl sm:text-3xl md:text-4xl short:text-xl font-mono'
         }`}
       >
         {question.text}
       </h2>
 
       {/* Timer Bar */}
-      <div className="w-full max-w-md my-2">
+      <div className="w-full max-w-md my-2 short:my-0.5 tight:my-1">
         <div className="flex justify-between items-center text-[11px] text-slate-400 font-mono mb-1">
           <span className="flex items-center gap-1">
             <Clock className="w-3 h-3 text-slate-500" /> Tiempo restante
@@ -227,7 +227,7 @@ export const QuestionPanel: React.FC<QuestionPanelProps> = ({
 
       {/* Interactive Answer Grid / Options */}
       <div
-        className={`w-full max-w-xl mt-3 ${
+        className={`w-full max-w-xl mt-3 short:mt-1 tight:mt-1.5 ${
           hasLongTextOptions
             ? 'flex flex-col gap-2.5'
             : 'grid grid-cols-3 gap-2 sm:gap-3 max-w-lg max-sm:sticky max-sm:bottom-0 max-sm:z-10 max-sm:bg-slate-900 max-sm:py-1'
@@ -260,7 +260,7 @@ export const QuestionPanel: React.FC<QuestionPanelProps> = ({
               className={`rounded-xl border-2 transition-all duration-150 flex items-center relative cursor-pointer active:scale-95 disabled:cursor-not-allowed ${
                 hasLongTextOptions
                   ? 'p-3 text-left font-sans text-xs sm:text-sm font-semibold justify-start gap-2.5'
-                  : 'p-3 sm:p-4 justify-center font-mono text-xl sm:text-2xl font-bold'
+                  : 'p-3 sm:p-4 short:p-1.5 tight:p-2 justify-center font-mono text-xl sm:text-2xl font-bold'
               } ${btnStyles}`}
             >
               <span
@@ -282,12 +282,12 @@ export const QuestionPanel: React.FC<QuestionPanelProps> = ({
 
       {/* Immediate Educational Feedback Banner */}
       <div
-        className={`w-full max-w-xl mt-3.5 p-3 sm:p-4 rounded-xl text-xs sm:text-sm transition-all flex items-start gap-2.5 text-left ${
+        className={`w-full max-w-xl mt-3.5 short:mt-1.5 p-3 sm:p-4 short:p-1.5 rounded-xl text-xs sm:text-sm short:text-[11px] transition-all flex items-start gap-2.5 text-left ${
           isAnswered
             ? isCorrect
               ? 'bg-emerald-950/60 border border-emerald-500/40 text-emerald-200'
               : 'bg-rose-950/60 border border-rose-500/40 text-rose-200'
-            : 'bg-slate-800/40 border border-slate-800 text-slate-400'
+            : 'bg-slate-800/40 border border-slate-800 text-slate-400 tight:hidden short:hidden'
         }`}
       >
         {isAnswered ? (

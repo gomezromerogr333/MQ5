@@ -164,6 +164,7 @@ export default function App({ playerName, courseName, onExit }: AppProps = {}) {
   //  - answerLockRef: una pregunta solo se contesta una vez, aunque lleguen dos eventos
   //    (tecla repetida, o tiempo agotado + clic) antes de que React repinte.
   //  - advanceTimeoutRef: la espera de 1,4 s hacia la siguiente pregunta, cancelable.
+  const sceneSectionRef = useRef<HTMLElement>(null);
   const roundTokenRef = useRef(0);
   const answerLockRef = useRef(false);
   const advanceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -580,6 +581,15 @@ export default function App({ playerName, courseName, onExit }: AppProps = {}) {
     setSession((prev) => ({ ...prev, isTimerActive: true }));
   }, [tutorialGameMode]);
 
+  // Celular acostado o vertical chico (pantalla baja): al empezar un nivel, sube la escena al borde de la
+  // pantalla. Así el juego y el panel anclado de respuestas se ven juntos sin tener que
+  // adivinar que hay que desplazarse. No hace nada en pantallas normales ni en el mapa.
+  useEffect(() => {
+    if (viewMode !== 'game' || levelLoading || tutorialGameMode) return;
+    if (!window.matchMedia?.('(max-height: 500px), (max-width: 639px) and (max-height: 700px)').matches) return;
+    sceneSectionRef.current?.scrollIntoView?.({ block: 'start', behavior: 'smooth' });
+  }, [viewMode, levelLoading, tutorialGameMode, currentRegionId, currentGameModeId]);
+
   if (progressLoading) {
     return (
       <div className="min-h-screen bg-[#142138] text-slate-100 flex items-center justify-center gap-3">
@@ -663,7 +673,7 @@ export default function App({ playerName, courseName, onExit }: AppProps = {}) {
           </div>
         )}
 
-        <section className="relative w-full">
+        <section ref={sceneSectionRef} className="relative w-full">
           <WorldViewport
             key={worldKey}
             viewMode={viewMode}
@@ -715,7 +725,7 @@ export default function App({ playerName, courseName, onExit }: AppProps = {}) {
             // En celular el panel queda anclado al borde inferior de la pantalla:
             // los botones de respuesta siempre se ven sin tener que bajar, y la
             // escena 3D sigue visible arriba. En tablet/escritorio (sm+) no cambia.
-            <div className="max-sm:sticky max-sm:bottom-0 max-sm:z-40 max-sm:max-h-[70dvh] max-sm:overflow-y-auto max-sm:pb-[env(safe-area-inset-bottom)]">
+            <div className="max-sm:sticky max-sm:bottom-0 max-sm:z-40 max-sm:max-h-[70dvh] max-sm:overflow-y-auto max-sm:pb-[env(safe-area-inset-bottom)] short:sticky short:bottom-0 short:z-40 short:max-h-[58dvh] short:overflow-y-auto">
             <QuestionPanel
               question={activeQuestion}
               timeLeft={session.timeLeft}

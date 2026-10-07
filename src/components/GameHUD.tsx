@@ -43,7 +43,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({
       <div className="flex items-center gap-3">
         <button
           onClick={onOpenMap}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-sm font-bold transition-all ${
+          className={`flex items-center gap-2 px-3 py-1.5 pointer-coarse:min-h-11 rounded-xl border text-sm font-bold transition-all ${
             viewMode === 'map'
               ? 'bg-blue-600 border-blue-400 text-white shadow-md shadow-blue-600/30'
               : 'bg-slate-800/80 border-slate-700 text-slate-200 hover:bg-slate-700'
@@ -88,7 +88,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({
       )}
 
       {/* Right: Stats, Lives, Combo, Controls */}
-      <div className="flex items-center gap-2 sm:gap-3">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
         {/* Score */}
         <div className="flex items-center gap-1.5 bg-slate-800/90 border border-slate-700 px-3 py-1.5 rounded-full text-xs font-mono font-bold text-amber-300">
           <span>⭐</span>
@@ -122,7 +122,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({
           {viewMode === 'game' && onPause && (
             <button
               onClick={onPause}
-              className="p-1.5 text-slate-400 hover:text-white bg-slate-800/70 hover:bg-slate-700 rounded-lg transition-colors"
+              className="p-1.5 pointer-coarse:min-h-11 pointer-coarse:min-w-11 pointer-coarse:flex pointer-coarse:items-center pointer-coarse:justify-center text-slate-400 hover:text-white bg-slate-800/70 hover:bg-slate-700 rounded-lg transition-colors"
               title="Pausar"
             >
               <Pause className="w-4 h-4" />
@@ -132,7 +132,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({
           {viewMode === 'game' && (
             <button
               onClick={onResetGame}
-              className="p-1.5 text-slate-400 hover:text-white bg-slate-800/70 hover:bg-slate-700 rounded-lg transition-colors"
+              className="p-1.5 pointer-coarse:min-h-11 pointer-coarse:min-w-11 pointer-coarse:flex pointer-coarse:items-center pointer-coarse:justify-center text-slate-400 hover:text-white bg-slate-800/70 hover:bg-slate-700 rounded-lg transition-colors"
               title="Reiniciar mundo actual"
             >
               <RotateCcw className="w-4 h-4" />
@@ -142,7 +142,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({
           {onOpenReport && (
             <button
               onClick={onOpenReport}
-              className="p-1.5 text-slate-400 hover:text-white bg-slate-800/70 hover:bg-slate-700 rounded-lg transition-colors"
+              className="p-1.5 pointer-coarse:min-h-11 pointer-coarse:min-w-11 pointer-coarse:flex pointer-coarse:items-center pointer-coarse:justify-center text-slate-400 hover:text-white bg-slate-800/70 hover:bg-slate-700 rounded-lg transition-colors"
               title="Ver reporte pedagógico y competencias"
             >
               <BarChart3 className="w-4 h-4" />
@@ -151,7 +151,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({
 
           <button
             onClick={onToggleSound}
-            className="p-1.5 text-slate-400 hover:text-white bg-slate-800/70 hover:bg-slate-700 rounded-lg transition-colors"
+            className="p-1.5 pointer-coarse:min-h-11 pointer-coarse:min-w-11 pointer-coarse:flex pointer-coarse:items-center pointer-coarse:justify-center text-slate-400 hover:text-white bg-slate-800/70 hover:bg-slate-700 rounded-lg transition-colors"
             title={isMuted ? 'Activar sonido' : 'Silenciar'}
           >
             {isMuted ? <VolumeX className="w-4 h-4 text-rose-400" /> : <Volume2 className="w-4 h-4 text-emerald-400" />}

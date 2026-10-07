@@ -4931,7 +4931,7 @@ export const ThreeWorldCanvas: React.FC<ThreeWorldCanvasProps> = ({
   }, [viewMode, gameMode]);
 
   return (
-    <div className="relative w-full h-[320px] sm:h-[380px] md:h-[440px] overflow-hidden rounded-2xl border border-slate-700/60 bg-[#142138] shadow-2xl select-none">
+    <div className="relative w-full h-[320px] sm:h-[380px] md:h-[440px] short:h-[46dvh] overflow-hidden rounded-2xl border border-slate-700/60 bg-[#142138] shadow-2xl select-none">
       <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
 
       {/* Floating 3D Navigation Controls Overlay */}
