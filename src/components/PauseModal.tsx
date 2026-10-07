@@ -11,8 +11,8 @@ export const PauseModal: React.FC<PauseModalProps> = ({ isOpen, onResume, onGoTo
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-md p-4 animate-in fade-in duration-300">
-      <div className="bg-slate-900 border border-slate-700 rounded-3xl w-full max-w-sm p-6 sm:p-8 text-center shadow-2xl text-slate-100 relative overflow-hidden">
+    <div className="fixed inset-0 z-50 flex overflow-y-auto bg-slate-950/85 backdrop-blur-md p-4 animate-in fade-in duration-300">
+      <div className="bg-slate-900 border border-slate-700 m-auto rounded-3xl w-full max-w-sm p-6 sm:p-8 text-center shadow-2xl text-slate-100 relative overflow-hidden">
         <div className="absolute -top-24 -left-24 w-48 h-48 rounded-full blur-3xl opacity-30 bg-amber-500" />
 
         <div className="mx-auto w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-4 bg-slate-800 border border-slate-700 shadow-inner">

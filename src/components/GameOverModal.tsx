@@ -53,8 +53,8 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-md p-4 animate-in fade-in duration-300">
-      <div className="bg-slate-900 border border-slate-700 rounded-3xl w-full max-w-md p-6 sm:p-8 text-center shadow-2xl text-slate-100 relative overflow-hidden">
+    <div className="fixed inset-0 z-50 flex overflow-y-auto bg-slate-950/85 backdrop-blur-md p-4 animate-in fade-in duration-300">
+      <div className="bg-slate-900 border border-slate-700 m-auto rounded-3xl w-full max-w-md p-6 sm:p-8 text-center shadow-2xl text-slate-100 relative overflow-hidden">
         {/* Glow backdrop */}
         <div
           className={`absolute -top-24 -left-24 w-48 h-48 rounded-full blur-3xl opacity-30 ${
