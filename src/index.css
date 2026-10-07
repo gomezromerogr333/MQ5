@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Pantallas bajas (celular acostado): ver ADR-023. `short:` solo actúa si la altura <= 500px. */
+@custom-variant short (@media (max-height: 500px));
+/* Celular vertical bajo (p. ej. 320×568, 360×640): panel de respuestas más compacto. */
+@custom-variant tight (@media (max-width: 639px) and (max-height: 700px));
+
 :root {
   box-sizing: border-box;
 }

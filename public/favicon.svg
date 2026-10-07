@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="MathQuest 5">
+<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e345c"/><stop offset="1" stop-color="#0e1a30"/></linearGradient></defs>
+<rect width="512" height="512" rx="115" fill="url(#g)"/>
+<circle cx="256.0" cy="256.0" r="192.0" fill="#34d399" fill-opacity=".10" stroke="#34d399" stroke-width="20.5"/>
+<circle cx="391.8" cy="391.8" r="11.3" fill="#fff"/><circle cx="120.2" cy="391.8" r="11.3" fill="#fff"/><circle cx="120.2" cy="120.2" r="11.3" fill="#fff"/><circle cx="391.8" cy="120.2" r="11.3" fill="#fff"/><polygon points="256.0,94.7 256.0,217.6 294.4,217.6" fill="#6ae37a"/><polygon points="256.0,94.7 256.0,217.6 217.6,217.6" fill="#4a9e55"/><polygon points="417.3,256.0 294.4,256.0 294.4,294.4" fill="#ffcc05"/><polygon points="417.3,256.0 294.4,256.0 294.4,217.6" fill="#bc8e03"/><polygon points="256.0,417.3 256.0,294.4 217.6,294.4" fill="#bb9bff"/><polygon points="256.0,417.3 256.0,294.4 294.4,294.4" fill="#826cc3"/><polygon points="94.7,256.0 217.6,256.0 217.6,217.6" fill="#ff7fcb"/><polygon points="94.7,256.0 217.6,256.0 217.6,294.4" fill="#be588d"/>
+<circle cx="256.0" cy="256.0" r="56.3" fill="#fff"/><circle cx="256.0" cy="256.0" r="23.6" fill="#0e1a30"/>
+</svg>
