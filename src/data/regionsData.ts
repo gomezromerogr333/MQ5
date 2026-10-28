@@ -54,7 +54,7 @@ export const REGIONS: RegionDefinition[] = [
     accentColor: '#F472B6',
     bgGradient: 'from-pink-900/60 to-slate-950/90',
     icon: '🏰',
-    competency: 'Divisiones de 1 cifra',
+    competency: 'Divisiones: de las tablas hasta 4 cifras',
     description: 'Conquista el castillo resolviendo divisiones a través de los 5 desafíos.',
     islandPosition: [2.5, 4.2, 6.8],
   },
