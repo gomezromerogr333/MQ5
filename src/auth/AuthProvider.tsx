@@ -26,14 +26,16 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 async function fetchProfile(userId: string): Promise<Profile> {
-  const { data: role, error: roleError } = await supabase.rpc('get_my_role');
-  if (roleError) throw roleError;
+  // Las dos lecturas van en paralelo (antes en serie: un viaje de red más en cada entrada).
+  // get_my_student devuelve vacío si la persona no es estudiante, así que es seguro pedirla ya.
+  const [roleRes, studentRes] = await Promise.all([supabase.rpc('get_my_role'), supabase.rpc('get_my_student')]);
+  if (roleRes.error) throw roleRes.error;
+  const role = roleRes.data;
 
   let student: StudentProfile | null = null;
   if (role === 'student') {
-    const { data, error: studentError } = await supabase.rpc('get_my_student');
-    if (studentError) throw studentError;
-    student = ((data as StudentProfile[] | null) ?? [])[0] ?? null;
+    if (studentRes.error) throw studentRes.error;
+    student = ((studentRes.data as StudentProfile[] | null) ?? [])[0] ?? null;
   }
   return { userId, role: (role as Role) ?? 'none', student };
 }

@@ -6,8 +6,8 @@ describe('música de fondo', () => {
     for (const [id, t] of Object.entries(TRACKS)) {
       expect(t.melody.length, id).toBe(32);
       expect(t.chords.length, id).toBe(4);
-      expect(t.bpm).toBeGreaterThan(80);
-      expect(t.bpm).toBeLessThan(140);
+      expect(t.bpm).toBeGreaterThan(50);
+      expect(t.bpm).toBeLessThan(80);
     }
   });
 

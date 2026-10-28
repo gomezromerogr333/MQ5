@@ -7,7 +7,7 @@
  * Diseño:
  *  - Una pista por lugar: mapa, cada región y el Gran Final del universo completado.
  *  - Volumen muy bajo (bus de música ≈ 0.05) con filtro paso-bajo para que suene "de fondo".
- *  - Cambio de pista con fundido cruzado (~1,2 s).
+ *  - Cambio de pista con fundido cruzado (~2 s).
  *  - "Ducking": cuando suena un efecto (acierto, error...) la música baja un momento.
  *  - No arranca hasta el primer toque/tecla (política de autoplay de los navegadores).
  *  - Se calla sola si la pestaña queda oculta y vuelve al regresar.
@@ -38,7 +38,7 @@ const N = null;
 export const TRACKS: Record<MusicTrackId, Track> = {
   // Mapa: paseo tranquilo y curioso.
   map: {
-    root: 60, bpm: 96, chords: [0, 9, 5, 7], lead: 'triangle', bounce: true,
+    root: 60, bpm: 60, chords: [0, 9, 5, 7], lead: 'sine', bounce: false,
     melody: [
       4, N, 7, N, 9, 7, 4, N,
       4, N, 9, N, 12, 9, 7, N,
@@ -48,7 +48,7 @@ export const TRACKS: Record<MusicTrackId, Track> = {
   },
   // Bosque (Suma): saltarín y luminoso.
   bosque: {
-    root: 67, bpm: 116, chords: [0, 5, 7, 0], lead: 'square', bounce: true,
+    root: 67, bpm: 68, chords: [0, 5, 7, 0], lead: 'sine', bounce: false,
     melody: [
       0, 4, 7, 4, 9, 7, 4, 2,
       0, 4, 7, 12, 9, 7, 4, N,
@@ -58,7 +58,7 @@ export const TRACKS: Record<MusicTrackId, Track> = {
   },
   // Montaña (Resta): aire abierto, notas que bajan como una ladera.
   montana: {
-    root: 62, bpm: 100, chords: [0, 7, 9, 5], lead: 'triangle', bounce: false,
+    root: 62, bpm: 56, chords: [0, 7, 9, 5], lead: 'sine', bounce: false,
     melody: [
       12, N, 9, 7, 9, N, 4, N,
       7, N, 4, 2, 4, N, 0, N,
@@ -68,7 +68,7 @@ export const TRACKS: Record<MusicTrackId, Track> = {
   },
   // Ciudad (Multiplicación): ritmo marcado, un poco juguetón.
   ciudad: {
-    root: 65, bpm: 124, chords: [0, 0, 5, 7], lead: 'square', bounce: true,
+    root: 65, bpm: 70, chords: [0, 0, 5, 7], lead: 'sine', bounce: false,
     melody: [
       0, N, 4, 4, 7, N, 4, N,
       0, N, 4, 4, 9, N, 7, N,
@@ -78,7 +78,7 @@ export const TRACKS: Record<MusicTrackId, Track> = {
   },
   // Castillo (División): señorial pero amable, en modo menor.
   castillo: {
-    root: 57, bpm: 92, chords: [0, 8, 5, 7], minor: true, lead: 'triangle', bounce: false,
+    root: 57, bpm: 54, chords: [0, 8, 5, 7], minor: true, lead: 'sine', bounce: false,
     melody: [
       0, N, 3, 7, 12, N, 10, N,
       8, N, 7, 3, 7, N, N, N,
@@ -88,7 +88,7 @@ export const TRACKS: Record<MusicTrackId, Track> = {
   },
   // Gran Final: triunfal y festivo.
   finale: {
-    root: 60, bpm: 132, chords: [0, 5, 9, 7], lead: 'square', bounce: true,
+    root: 60, bpm: 76, chords: [0, 5, 9, 7], lead: 'sine', bounce: true,
     melody: [
       12, 16, 19, 16, 12, 16, 19, N,
       17, 21, 24, 21, 17, 21, 24, N,
@@ -98,10 +98,10 @@ export const TRACKS: Record<MusicTrackId, Track> = {
   },
 };
 
-/** Volumen del bus de música (muy bajo a propósito: es fondo). */
+/** Volumen del bus de música (muy bajo y cálido a propósito: es fondo). */
 export const MUSIC_LEVEL = 0.05;
-const DUCK_FACTOR = 0.35;
-const FADE_S = 1.2;
+const DUCK_FACTOR = 0.4;
+const FADE_S = 2;
 const LOOKAHEAD_S = 0.35;
 const TICK_MS = 120;
 const STORAGE_KEY = 'mq5.music';
@@ -150,11 +150,23 @@ function getCtx(): AudioContext | null {
       ctx = new Ctor();
       const lp = ctx.createBiquadFilter();
       lp.type = 'lowpass';
-      lp.frequency.value = 2400;
+      lp.frequency.value = 1500;
       master = ctx.createGain();
       master.gain.value = 0;
       master.connect(lp);
       lp.connect(ctx.destination);
+      // Eco suave: da calidez y "aire" sin añadir notas.
+      const echo = ctx.createDelay(1);
+      echo.delayTime.value = 0.42;
+      const fb = ctx.createGain();
+      fb.gain.value = 0.28;
+      const wet = ctx.createGain();
+      wet.gain.value = 0.35;
+      lp.connect(echo);
+      echo.connect(fb);
+      fb.connect(echo);
+      echo.connect(wet);
+      wet.connect(ctx.destination);
     } catch {
       ctx = null;
       return null;
@@ -185,7 +197,7 @@ function note(c: AudioContext, bus: GainNode, freq: number, t: number, dur: numb
   osc.type = type;
   osc.frequency.setValueAtTime(freq, t);
   g.gain.setValueAtTime(0.0001, t);
-  g.gain.linearRampToValueAtTime(vol, t + 0.015);
+  g.gain.linearRampToValueAtTime(vol, t + Math.min(0.09, dur * 0.3));
   g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
   osc.connect(g);
   g.connect(bus);
@@ -203,14 +215,14 @@ function scheduleStep(c: AudioContext, bus: GainNode, tr: Track, step: number, t
   // Melodía
   const m = tr.melody[step % tr.melody.length];
   if (m !== null && m !== undefined) {
-    note(c, bus, mtof(tr.root + m), t, eighth * 1.6, tr.lead, tr.lead === 'square' ? 0.5 : 0.9);
+    note(c, bus, mtof(tr.root + m), t, eighth * 3.2, tr.lead, 0.9);
   }
 
   // Bajo (una octava y media por debajo)
   const bassRoot = chordRoot - 24;
   if (tr.bounce) {
-    if (inBar % 4 === 0) note(c, bus, mtof(bassRoot), t, eighth * 1.8, 'triangle', 1);
-    if (inBar % 4 === 2) note(c, bus, mtof(bassRoot + 7), t, eighth * 1.2, 'triangle', 0.7);
+    if (inBar % 4 === 0) note(c, bus, mtof(bassRoot), t, eighth * 3.5, 'triangle', 0.9);
+    if (inBar % 4 === 2) note(c, bus, mtof(bassRoot + 7), t, eighth * 2.4, 'triangle', 0.55);
   } else if (inBar === 0 || inBar === 4) {
     note(c, bus, mtof(bassRoot), t, eighth * 3.5, 'triangle', 1);
   }
@@ -218,8 +230,8 @@ function scheduleStep(c: AudioContext, bus: GainNode, tr: Track, step: number, t
   // Acompañamiento suave: tercera y quinta en los tiempos 2 y 4 de cada compás
   if (inBar === 2 || inBar === 6) {
     const third = tr.minor ? 3 : 4;
-    note(c, bus, mtof(chordRoot - 12 + third), t, eighth * 1.5, 'sine', 0.45);
-    note(c, bus, mtof(chordRoot - 12 + 7), t, eighth * 1.5, 'sine', 0.45);
+    note(c, bus, mtof(chordRoot - 12 + third), t, eighth * 3, 'sine', 0.4);
+    note(c, bus, mtof(chordRoot - 12 + 7), t, eighth * 3, 'sine', 0.4);
   }
 }
 

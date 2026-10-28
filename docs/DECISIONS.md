@@ -230,9 +230,16 @@ Cada decisión importante: qué cambió, por qué y qué impacto tiene.
 - **Pendiente conocido:** el texto de `competency` del Castillo en `regionsData.ts` dice "Divisiones de 1 cifra"; ya no es cierto para los niveles 2-4 (ADR-021).
 
 ## ADR-024 · Música de fondo de aventura (una pista por lugar)
-- **Qué:** `src/utils/music.ts`. 6 pistas ORIGINALES sintetizadas con Web Audio (sin archivos; no copian ninguna obra): mapa, Bosque (Suma), Montaña (Resta), Ciudad (Multiplicación), Castillo (División, modo menor) y Gran Final del universo completado. Pentatónicas, 92-132 bpm, bucle de 4 compases.
+- **Qué:** `src/utils/music.ts`. 6 pistas ORIGINALES sintetizadas con Web Audio (sin archivos; no copian ninguna obra): mapa, Bosque (Suma), Montaña (Resta), Ciudad (Multiplicación), Castillo (División, modo menor) y Gran Final del universo completado. Pentatónicas, 54-76 bpm (ajustado el 28-oct: la primera versión, 92-132 bpm con ondas cuadradas, agobiaba; ahora solo ondas suaves senoidales/triangulares, notas largas, filtro a 1,5 kHz y eco suave para calidez), bucle de 4 compases.
 - **Cuándo suena cada una:** `trackFor()` — Gran Final mientras está activo el final; en el mapa, la del mapa; jugando, la de la región actual.
 - **Fondo de verdad:** bus a 0,05 con filtro paso-bajo (pico medido ≈ 0,09 en Chrome real); fundido cruzado de 1,2 s entre pistas; "ducking" (baja a 35 %) cuando suena un efecto (`playSfx`, salvo `click`).
 - **Control:** respeta el botón de silencio global (`toggleAudioMute` → `setMusicMuted`; medido: pico 0 al silenciar) y tiene interruptor propio (botón de nota musical en el HUD, tecla **N**), recordado en `localStorage` (`mq5.music`, con try/catch).
 - **Navegador:** no arranca hasta el primer toque/tecla (autoplay); se detiene si la pestaña queda oculta y vuelve al regresar. Sin `AudioContext` (pruebas) todo son no-operaciones. Usa su propio `AudioContext`, así `audio.ts` y sus mocks de las pruebas no cambian.
 - **Sin migración.** Para cambiar el ánimo de una pista basta editar `TRACKS` (melodía en semitonos sobre la tónica).
+
+## ADR-025 · Entrada más rápida al juego + música más calmada
+- **Queja:** "se demora mucho en entrar". Cadena de esperas en serie al entrar: `signInAnonymously` → `register_student` → `get_my_role` → **luego** `get_my_student` → descarga del bloque del juego (~200 kB gzip, recién al navegar a `/jugar`) → progreso → (al elegir nivel) `game_modes` + `region_games` + preguntas.
+- **Cambios (sin tocar reglas ni base de datos):** (1) `fetchProfile` pide rol y perfil en paralelo (`AuthProvider`); (2) `main.tsx` precarga el bloque del juego en `/estudiante` y `/jugar` (y en reposo en `/`; no en `/docente`); (3) `fetchProgress` calienta en paralelo la configuración de niveles (ya cacheada), para que el primer nivel pida solo las preguntas.
+- **Medido** (Chrome real, Supabase simulado con 150 ms por petición, entrando con sesión guardada): mapa visible ~1,40 s → ~1,05 s. Con la red real (más lenta) el ahorro crece, porque se quitan viajes de red completos. El tiempo de entrada nuevo (registro) no se midió con red real.
+- **Revisión a fondo:** con Chrome real se jugó una ronda completa de los 5 juegos (Carrera, Batalla, Puente, Tienda, Detective) en 1280×800 y en 390×844: 5 `submit_round`, modal de resultado y confeti correctos, **cero errores de consola**. Los fotogramas lentos de la prueba son del render por software (SwiftShader) del servidor de pruebas; no representan un dispositivo real.
+- **Música:** bajada a 54-76 bpm (ver ADR-024).

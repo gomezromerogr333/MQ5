@@ -13,7 +13,19 @@ import ConfigMissing from './pages/ConfigMissing';
 import './index.css';
 
 // El juego (y Three.js) se descarga solo cuando el estudiante llega a /jugar.
-const GamePage = lazy(() => import('./pages/GamePage'));
+const loadGamePage = () => import('./pages/GamePage');
+const GamePage = lazy(loadGamePage);
+
+// Precarga del juego: la descarga (~200 kB comprimidos) empieza mientras el niño escribe sus
+// datos o mientras se confirma su sesión, en vez de esperar a que termine el registro.
+// Docentes no la necesitan: no se precarga en sus rutas.
+if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/docente')) {
+  const prefetch = () => void loadGamePage().catch(() => undefined);
+  const p = window.location.pathname;
+  if (p.startsWith('/jugar') || p.startsWith('/estudiante')) prefetch();
+  else if ('requestIdleCallback' in window) window.requestIdleCallback(prefetch, { timeout: 4000 });
+  else setTimeout(prefetch, 2500);
+}
 
 function AppRoutes() {
   return (

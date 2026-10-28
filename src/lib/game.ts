@@ -41,6 +41,9 @@ interface ProgressRow {
 
 /** Progreso completo (4 regiones × 5 niveles) desde get_my_progress() + XP total. */
 export async function fetchProgress(): Promise<{ regions: RegionProgress[]; totalXp: number }> {
+  // Calienta en paralelo la configuración de los niveles (se cachea): así el primer nivel que
+  // elija el niño ya no espera esas consultas. Si falla, fetchQuestionsForLevel reintenta.
+  void Promise.all([loadGameModes(), loadRegionGameOverrides()]).catch(() => undefined);
   const [progressRes, xpRes] = await Promise.all([
     supabase.rpc('get_my_progress'),
     supabase.rpc('get_my_total_xp'),
