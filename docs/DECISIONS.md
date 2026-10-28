@@ -228,3 +228,11 @@ Cada decisión importante: qué cambió, por qué y qué impacto tiene.
 - **Verificado:** Chrome real: manifiesto sin errores, **cero errores de instalabilidad**, todos los archivos 200 con el tipo correcto. `src/test/branding.test.tsx` protege que cada archivo referenciado exista, que los iconos midan lo que declara el manifiesto y que la imagen sea absoluta y <300 KB.
 - **Sin cambios a propósito:** `viewport` sigue con `user-scalable=no` (evita el zoom por doble toque en los botones del juego; limita la accesibilidad, anotado). Sin service worker (el juego necesita Supabase; Chrome no lo exige para instalar). `apple-mobile-web-app-status-bar-style` en `black` (con `black-translucent` el contenido quedaría bajo la barra de estado).
 - **Pendiente conocido:** el texto de `competency` del Castillo en `regionsData.ts` dice "Divisiones de 1 cifra"; ya no es cierto para los niveles 2-4 (ADR-021).
+
+## ADR-024 · Música de fondo de aventura (una pista por lugar)
+- **Qué:** `src/utils/music.ts`. 6 pistas ORIGINALES sintetizadas con Web Audio (sin archivos; no copian ninguna obra): mapa, Bosque (Suma), Montaña (Resta), Ciudad (Multiplicación), Castillo (División, modo menor) y Gran Final del universo completado. Pentatónicas, 92-132 bpm, bucle de 4 compases.
+- **Cuándo suena cada una:** `trackFor()` — Gran Final mientras está activo el final; en el mapa, la del mapa; jugando, la de la región actual.
+- **Fondo de verdad:** bus a 0,05 con filtro paso-bajo (pico medido ≈ 0,09 en Chrome real); fundido cruzado de 1,2 s entre pistas; "ducking" (baja a 35 %) cuando suena un efecto (`playSfx`, salvo `click`).
+- **Control:** respeta el botón de silencio global (`toggleAudioMute` → `setMusicMuted`; medido: pico 0 al silenciar) y tiene interruptor propio (botón de nota musical en el HUD, tecla **N**), recordado en `localStorage` (`mq5.music`, con try/catch).
+- **Navegador:** no arranca hasta el primer toque/tecla (autoplay); se detiene si la pestaña queda oculta y vuelve al regresar. Sin `AudioContext` (pruebas) todo son no-operaciones. Usa su propio `AudioContext`, así `audio.ts` y sus mocks de las pruebas no cambian.
+- **Sin migración.** Para cambiar el ánimo de una pista basta editar `TRACKS` (melodía en semitonos sobre la tónica).

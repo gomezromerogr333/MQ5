@@ -1,5 +1,5 @@
 import React from 'react';
-import { Volume2, VolumeX, Map, BarChart3, RotateCcw, Pause } from 'lucide-react';
+import { Volume2, VolumeX, Music, Map, BarChart3, RotateCcw, Pause } from 'lucide-react';
 import { LevelDisplayInfo } from '../types';
 
 interface GameHUDProps {
@@ -13,6 +13,9 @@ interface GameHUDProps {
   combo: number;
   isMuted: boolean;
   onToggleSound: () => void;
+  /** Interruptor propio de la música de fondo (opcional). */
+  isMusicOn?: boolean;
+  onToggleMusic?: () => void;
   onOpenMap: () => void;
   onOpenReport?: () => void;
   onResetGame: () => void;
@@ -30,6 +33,8 @@ export const GameHUD: React.FC<GameHUDProps> = ({
   combo,
   isMuted,
   onToggleSound,
+  isMusicOn = true,
+  onToggleMusic,
   onOpenMap,
   onOpenReport,
   onResetGame,
@@ -146,6 +151,17 @@ export const GameHUD: React.FC<GameHUDProps> = ({
               title="Ver reporte pedagógico y competencias"
             >
               <BarChart3 className="w-4 h-4" />
+            </button>
+          )}
+
+          {onToggleMusic && (
+            <button
+              onClick={onToggleMusic}
+              aria-pressed={isMusicOn}
+              className="p-1.5 pointer-coarse:min-h-11 pointer-coarse:min-w-11 pointer-coarse:flex pointer-coarse:items-center pointer-coarse:justify-center text-slate-400 hover:text-white bg-slate-800/70 hover:bg-slate-700 rounded-lg transition-colors"
+              title={isMusicOn ? 'Quitar la música de fondo' : 'Poner música de fondo'}
+            >
+              <Music className={`w-4 h-4 ${isMusicOn ? 'text-sky-300' : 'text-slate-500'}`} />
             </button>
           )}
 

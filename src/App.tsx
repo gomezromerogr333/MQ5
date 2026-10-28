@@ -3,6 +3,7 @@ import { REGIONS, findRegion, findGameMode } from './data/regionsData';
 import { fetchProgress, fetchQuestionsForLevel, submitRound } from './lib/game';
 import { GameMode, GameSessionState, PlayerStats, RegionProgress, LevelDisplayInfo } from './types';
 import { playSfx, toggleAudioMute, getIsMuted } from './utils/audio';
+import { setMusicTrack, toggleMusic, isMusicEnabled, trackFor } from './utils/music';
 import { WorldViewport } from './components/WorldViewport';
 import { GameHUD } from './components/GameHUD';
 import { QuestionPanel } from './components/QuestionPanel';
@@ -95,6 +96,7 @@ interface AppProps {
 export default function App({ playerName, courseName, onExit }: AppProps = {}) {
   const [viewMode, setViewMode] = useState<'map' | 'game'>('map');
   const [isMuted, setIsMuted] = useState<boolean>(getIsMuted());
+  const [isMusicOn, setIsMusicOn] = useState<boolean>(() => isMusicEnabled());
 
   // Progreso real (4 regiones × 5 niveles) leído de get_my_progress()
   const [regionsProgress, setRegionsProgress] = useState<RegionProgress[]>([]);
@@ -155,6 +157,12 @@ export default function App({ playerName, courseName, onExit }: AppProps = {}) {
     () => playSfx('victory'),
   );
   const universeComplete = isUniverseComplete(regionsProgress);
+
+  // Música de fondo: mapa / región que se juega / Gran Final (ver utils/music.ts, ADR-024).
+  useEffect(() => {
+    setMusicTrack(trackFor({ finale: finaleActive, viewMode, regionId: currentRegionId }));
+  }, [finaleActive, viewMode, currentRegionId]);
+  useEffect(() => () => setMusicTrack(null), []);
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const submittedRef = useRef(false);
@@ -522,6 +530,8 @@ export default function App({ playerName, courseName, onExit }: AppProps = {}) {
         setViewMode((v) => (v === 'map' ? 'game' : 'map'));
       } else if (e.key === 's' || e.key === 'S') {
         setIsMuted(toggleAudioMute());
+      } else if (e.key === 'n' || e.key === 'N') {
+        setIsMusicOn(toggleMusic());
       } else if (e.key === 'v' || e.key === 'V') {
         const btn = document.getElementById('engine-toggle-btn');
         if (btn) btn.click();
@@ -647,6 +657,8 @@ export default function App({ playerName, courseName, onExit }: AppProps = {}) {
           combo={stats.combo}
           isMuted={isMuted}
           onToggleSound={() => setIsMuted(toggleAudioMute())}
+          isMusicOn={isMusicOn}
+          onToggleMusic={() => setIsMusicOn(toggleMusic())}
           onOpenMap={() => setViewMode((v) => (v === 'map' ? 'game' : 'map'))}
           onResetGame={() => initLevelSession(currentRegionId, currentGameModeId)}
           onPause={

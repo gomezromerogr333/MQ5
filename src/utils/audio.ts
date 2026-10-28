@@ -3,6 +3,8 @@
  * Works seamlessly without external audio file dependencies.
  */
 
+import { setMusicMuted, duckMusic } from './music';
+
 let audioCtx: AudioContext | null = null;
 let isMuted: boolean = false;
 
@@ -22,6 +24,7 @@ function getAudioContext(): AudioContext | null {
 
 export function toggleAudioMute(): boolean {
   isMuted = !isMuted;
+  setMusicMuted(isMuted);
   return isMuted;
 }
 
@@ -64,6 +67,8 @@ export function playSfx(
   name: 'correct' | 'wrong' | 'combo' | 'hop' | 'attack' | 'hit' | 'build' | 'victory' | 'gameover' | 'click' | 'unlock'
 ) {
   if (isMuted) return;
+  // La música baja un instante para que el efecto se oiga (los toques de botón no la molestan).
+  if (name !== 'click') duckMusic(name === 'unlock' || name === 'victory' ? 1.6 : 0.6);
 
   switch (name) {
     case 'correct':
