@@ -1,3 +1,4 @@
+import { isExpoMode } from './expoMode';
 import { supabase } from './supabase';
 import type { GameMode, MathQuestion, RegionProgress, RoundAnswer } from '../types';
 
@@ -77,7 +78,13 @@ export async function fetchProgress(): Promise<{ regions: RegionProgress[]; tota
     .map((r) => ({ ...r, levels: r.levels.sort((a, b) => a.sortOrder - b.sortOrder) }))
     .sort((a, b) => a.sortOrder - b.sortOrder);
 
-  return { regions, totalXp: (xpRes.data as number) ?? 0 };
+  // Modo exposición (ADR-026): solo en pantalla, todo se ve y se puede jugar. Nada se guarda.
+  const expo = isExpoMode();
+  const shown = expo
+    ? regions.map((r) => ({ ...r, unlocked: true, levels: r.levels.map((l) => ({ ...l, unlocked: true })) }))
+    : regions;
+
+  return { regions: shown, totalXp: (xpRes.data as number) ?? 0 };
 }
 
 export interface LevelConfig {

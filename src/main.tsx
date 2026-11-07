@@ -1,3 +1,4 @@
+import { syncExpoFromUrl } from './lib/expoMode';
 import { StrictMode, Suspense, lazy } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
@@ -13,6 +14,8 @@ import ConfigMissing from './pages/ConfigMissing';
 import './index.css';
 
 // El juego (y Three.js) se descarga solo cuando el estudiante llega a /jugar.
+syncExpoFromUrl(); // modo exposición (?expo=1): ver lib/expoMode.ts
+
 const loadGamePage = () => import('./pages/GamePage');
 const GamePage = lazy(loadGamePage);
 

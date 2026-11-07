@@ -243,3 +243,10 @@ Cada decisión importante: qué cambió, por qué y qué impacto tiene.
 - **Medido** (Chrome real, Supabase simulado con 150 ms por petición, entrando con sesión guardada): mapa visible ~1,40 s → ~1,05 s. Con la red real (más lenta) el ahorro crece, porque se quitan viajes de red completos. El tiempo de entrada nuevo (registro) no se midió con red real.
 - **Revisión a fondo:** con Chrome real se jugó una ronda completa de los 5 juegos (Carrera, Batalla, Puente, Tienda, Detective) en 1280×800 y en 390×844: 5 `submit_round`, modal de resultado y confeti correctos, **cero errores de consola**. Los fotogramas lentos de la prueba son del render por software (SwiftShader) del servidor de pruebas; no representan un dispositivo real.
 - **Música:** bajada a 54-76 bpm (ver ADR-024).
+
+## ADR-026 · Modo exposición (`?expo=1`): todo desbloqueado, solo en pantalla
+- **Pedido:** poder mostrar todo el juego en una clase (4 mundos × 5 niveles) sin haberlos ganado. Cambio quirúrgico, sin dañar nada.
+- **Qué:** `src/lib/expoMode.ts` + una línea en `fetchProgress` (`src/lib/game.ts`) + una llamada en `main.tsx`. Con el modo activo, el cliente marca todas las regiones y niveles como desbloqueados **en memoria**. `submit_round` (servidor) nunca validó desbloqueo, así que no hizo falta tocar la base de datos ni migraciones.
+- **Cómo se activa:** abrir con `?expo=1` (se recuerda en el navegador con `localStorage`, `mq5.expo`); `?expo=0` lo apaga. Sin el parámetro el juego es idéntico al de siempre.
+- **Lo que NO cambia:** el progreso real (estrellas, rondas, XP), el panel docente, las reglas de desbloqueo (ADR-018) ni el Gran Final. Las rondas jugadas en modo exposición sí se guardan como cualquier ronda (suman estrellas/XP a esa cuenta). Conviene usar una cuenta de demostración, no la de un niño real.
+- **Verificado:** pruebas unitarias (3) y Chrome real con el servidor simulado dejando solo 1 nivel abierto: sin `?expo=1` quedan bloqueados 19 de 20 (como siempre); con `?expo=1` se abrieron y cargaron pregunta los 20 de 20 niveles (4 mundos × 5), sin errores de consola.
