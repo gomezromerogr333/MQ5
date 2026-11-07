@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GAME_MODES } from '../data/regionsData';
 import { GameMode, RegionDefinition, RegionProgress } from '../types';
 import { Lock, CheckCircle2, ChevronRight } from 'lucide-react';
@@ -23,6 +23,11 @@ export const RegionLevelStrip: React.FC<RegionLevelStripProps> = ({
 }) => {
   // Qué región se está viendo en la tira de niveles (no siempre la que se está jugando)
   const [viewingRegionId, setViewingRegionId] = useState(currentRegionId);
+  // Si la región activa cambia desde fuera (p. ej. tocando una isla del mapa 3D), la tira la sigue;
+  // antes se quedaba mostrando la región anterior y el nivel "Jugando" no se veía resaltado.
+  useEffect(() => {
+    setViewingRegionId(currentRegionId);
+  }, [currentRegionId]);
   const viewingRegion = regions.find((r) => r.id === viewingRegionId) || regions[0];
   const viewingProgress = progress.find((p) => p.regionId === viewingRegionId);
 

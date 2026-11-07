@@ -18,6 +18,11 @@
 
 export type MusicTrackId = 'map' | 'bosque' | 'montana' | 'ciudad' | 'castillo' | 'finale';
 
+/** "Instrumento" de la melodía: cada mundo suena con uno distinto. */
+export type Voice = 'kalimba' | 'marimba' | 'flute' | 'epiano' | 'organ' | 'bell';
+/** Forma del acompañamiento: cada mundo se mueve de una manera distinta. */
+type Style = 'offbeat' | 'arp' | 'drone' | 'walk' | 'pad' | 'bounce';
+
 interface Track {
   /** Nota MIDI de la tónica (melodía). */
   root: number;
@@ -28,17 +33,18 @@ interface Track {
   melody: (number | null)[];
   /** Calidad de los acordes: mayor o menor. */
   minor?: boolean;
-  lead: OscillatorType;
-  /** Si es true, el bajo hace "oom-pah" (tónica y quinta); si no, solo tónica en 1 y 3. */
-  bounce?: boolean;
+  voice: Voice;
+  style: Style;
+  /** Retraso de las corcheas impares (fracción de corchea): da balanceo tipo "swing". */
+  swing?: number;
 }
 
 const N = null;
 
 export const TRACKS: Record<MusicTrackId, Track> = {
-  // Mapa: paseo tranquilo y curioso.
+  // Mapa / respaldo: kalimba curiosa, paseo tranquilo.
   map: {
-    root: 60, bpm: 60, chords: [0, 9, 5, 7], lead: 'sine', bounce: false,
+    root: 60, bpm: 62, chords: [0, 9, 5, 7], voice: 'kalimba', style: 'offbeat',
     melody: [
       4, N, 7, N, 9, 7, 4, N,
       4, N, 9, N, 12, 9, 7, N,
@@ -46,49 +52,49 @@ export const TRACKS: Record<MusicTrackId, Track> = {
       7, 9, 7, 4, 2, N, 0, N,
     ],
   },
-  // Bosque (Suma): saltarín y luminoso.
+  // Bosque (Suma): marimba alegre con arpegios que saltan, como hojas al viento.
   bosque: {
-    root: 67, bpm: 68, chords: [0, 5, 7, 0], lead: 'sine', bounce: false,
+    root: 67, bpm: 76, chords: [0, 5, 7, 0], voice: 'marimba', style: 'arp',
     melody: [
-      0, 4, 7, 4, 9, 7, 4, 2,
-      0, 4, 7, 12, 9, 7, 4, N,
-      5, 9, 12, 9, 7, 4, 2, 4,
-      7, N, 4, N, 0, 2, 4, N,
+      0, N, 4, 7, N, 9, 7, N,
+      12, N, 9, 7, N, 4, 2, N,
+      5, N, 9, 12, N, 9, 7, N,
+      4, 7, 4, 2, 0, N, N, N,
     ],
   },
-  // Montaña (Resta): aire abierto, notas que bajan como una ladera.
+  // Montaña (Resta): flauta abierta y muy tranquila sobre un bordón, notas que bajan por la ladera.
   montana: {
-    root: 62, bpm: 56, chords: [0, 7, 9, 5], lead: 'sine', bounce: false,
+    root: 62, bpm: 50, chords: [0, 0, 7, 5], voice: 'flute', style: 'drone',
     melody: [
-      12, N, 9, 7, 9, N, 4, N,
-      7, N, 4, 2, 4, N, 0, N,
-      9, N, 7, 4, 7, N, 2, N,
-      5, 7, 9, 7, 4, N, N, N,
+      12, N, N, N, 9, N, N, N,
+      7, N, N, 9, 7, N, 4, N,
+      9, N, N, N, 7, N, N, N,
+      4, N, 2, N, 0, N, N, N,
     ],
   },
-  // Ciudad (Multiplicación): ritmo marcado, un poco juguetón.
+  // Ciudad (Multiplicación): piano eléctrico con balanceo y bajo que camina.
   ciudad: {
-    root: 65, bpm: 70, chords: [0, 0, 5, 7], lead: 'sine', bounce: false,
+    root: 65, bpm: 84, chords: [0, 0, 5, 7], voice: 'epiano', style: 'walk', swing: 0.25,
     melody: [
-      0, N, 4, 4, 7, N, 4, N,
-      0, N, 4, 4, 9, N, 7, N,
-      5, N, 9, 9, 12, N, 9, N,
-      7, 7, 4, 4, 2, N, 0, N,
+      N, 4, 7, N, 9, 7, N, 4,
+      N, 4, 7, N, 12, 9, N, 7,
+      N, 5, 9, N, 12, 9, N, 5,
+      7, N, 4, 2, 4, N, 0, N,
     ],
   },
-  // Castillo (División): señorial pero amable, en modo menor.
+  // Castillo (División): órgano señorial en menor, acordes largos y melodía lenta.
   castillo: {
-    root: 57, bpm: 54, chords: [0, 8, 5, 7], minor: true, lead: 'sine', bounce: false,
+    root: 57, bpm: 46, chords: [0, 8, 5, 7], minor: true, voice: 'organ', style: 'pad',
     melody: [
-      0, N, 3, 7, 12, N, 10, N,
-      8, N, 7, 3, 7, N, N, N,
-      5, N, 8, 12, 10, N, 8, N,
-      7, 8, 7, 3, 2, N, 0, N,
+      12, N, N, N, 10, N, N, N,
+      8, N, N, N, 7, N, N, N,
+      8, N, N, N, 12, N, N, N,
+      10, N, 8, N, 7, N, N, N,
     ],
   },
-  // Gran Final: triunfal y festivo.
+  // Gran Final: campanas brillantes y festivas.
   finale: {
-    root: 60, bpm: 76, chords: [0, 5, 9, 7], lead: 'sine', bounce: true,
+    root: 60, bpm: 80, chords: [0, 5, 9, 7], voice: 'bell', style: 'bounce',
     melody: [
       12, 16, 19, 16, 12, 16, 19, N,
       17, 21, 24, 21, 17, 21, 24, N,
@@ -191,13 +197,13 @@ function rampMaster(seconds = 0.25) {
   master.gain.linearRampToValueAtTime(targetLevel(), now + seconds);
 }
 
-function note(c: AudioContext, bus: GainNode, freq: number, t: number, dur: number, type: OscillatorType, vol: number) {
+function note(c: AudioContext, bus: GainNode, freq: number, t: number, dur: number, type: OscillatorType, vol: number, attack?: number) {
   const osc = c.createOscillator();
   const g = c.createGain();
   osc.type = type;
   osc.frequency.setValueAtTime(freq, t);
   g.gain.setValueAtTime(0.0001, t);
-  g.gain.linearRampToValueAtTime(vol, t + Math.min(0.09, dur * 0.3));
+  g.gain.linearRampToValueAtTime(vol, t + (attack ?? Math.min(0.09, dur * 0.3)));
   g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
   osc.connect(g);
   g.connect(bus);
@@ -205,33 +211,116 @@ function note(c: AudioContext, bus: GainNode, freq: number, t: number, dur: numb
   osc.stop(t + dur + 0.02);
 }
 
+/** Flauta: senoidal con soplo suave y un vibrato leve que aparece al sostener la nota. */
+function fluteNote(c: AudioContext, bus: GainNode, freq: number, t: number, dur: number, vol: number) {
+  const osc = c.createOscillator();
+  const g = c.createGain();
+  const lfo = c.createOscillator();
+  const lg = c.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(freq, t);
+  lfo.frequency.value = 4.8;
+  lg.gain.setValueAtTime(0, t);
+  lg.gain.linearRampToValueAtTime(9, t + dur * 0.7); // cents
+  lfo.connect(lg);
+  lg.connect(osc.detune);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.linearRampToValueAtTime(vol, t + 0.16);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  osc.connect(g);
+  g.connect(bus);
+  osc.start(t);
+  lfo.start(t);
+  osc.stop(t + dur + 0.02);
+  lfo.stop(t + dur + 0.02);
+}
+
+/** Una nota con el "instrumento" del mundo. `e` = duración de una corchea. */
+function voiceNote(c: AudioContext, bus: GainNode, voice: Voice, freq: number, t: number, e: number, vol = 1) {
+  switch (voice) {
+    case 'marimba':
+      note(c, bus, freq, t, e * 1.8, 'triangle', 0.9 * vol, 0.006);
+      note(c, bus, freq * 4, t, e * 0.6, 'sine', 0.14 * vol, 0.004);
+      break;
+    case 'kalimba':
+      note(c, bus, freq, t, e * 2.6, 'sine', 0.85 * vol, 0.004);
+      note(c, bus, freq * 3, t, e * 0.8, 'sine', 0.12 * vol, 0.003);
+      break;
+    case 'epiano':
+      note(c, bus, freq, t, e * 2.4, 'sine', 0.8 * vol, 0.01);
+      note(c, bus, freq * 2, t, e * 1.2, 'sine', 0.25 * vol, 0.01);
+      break;
+    case 'organ':
+      note(c, bus, freq, t, e * 4.5, 'sine', 0.7 * vol, 0.18);
+      note(c, bus, freq * 2, t, e * 4.5, 'sine', 0.25 * vol, 0.2);
+      note(c, bus, freq * 3, t, e * 4, 'sine', 0.08 * vol, 0.2);
+      break;
+    case 'bell':
+      note(c, bus, freq, t, e * 3.5, 'sine', 0.8 * vol, 0.004);
+      note(c, bus, freq * 2.76, t, e * 1.6, 'sine', 0.12 * vol, 0.003);
+      break;
+    case 'flute':
+      fluteNote(c, bus, freq, t, e * 5, 0.85 * vol);
+      break;
+  }
+}
+
 /** Programa las notas del paso `step` (corchea) de la pista, empezando en el tiempo `t`. */
-function scheduleStep(c: AudioContext, bus: GainNode, tr: Track, step: number, t: number) {
-  const eighth = 60 / tr.bpm / 2;
+function scheduleStep(c: AudioContext, bus: GainNode, tr: Track, step: number, t0: number) {
+  const e = 60 / tr.bpm / 2;
   const bar = Math.floor(step / 8) % tr.chords.length;
   const inBar = step % 8;
   const chordRoot = tr.root + tr.chords[bar];
+  const third = tr.minor ? 3 : 4;
+  const bassRoot = chordRoot - 24;
+  // Balanceo: las corcheas impares se retrasan un poco
+  const t = t0 + (inBar % 2 === 1 && tr.swing ? e * tr.swing : 0);
 
   // Melodía
   const m = tr.melody[step % tr.melody.length];
-  if (m !== null && m !== undefined) {
-    note(c, bus, mtof(tr.root + m), t, eighth * 3.2, tr.lead, 0.9);
-  }
+  if (m !== null && m !== undefined) voiceNote(c, bus, tr.voice, mtof(tr.root + m), t, e);
 
-  // Bajo (una octava y media por debajo)
-  const bassRoot = chordRoot - 24;
-  if (tr.bounce) {
-    if (inBar % 4 === 0) note(c, bus, mtof(bassRoot), t, eighth * 3.5, 'triangle', 0.9);
-    if (inBar % 4 === 2) note(c, bus, mtof(bassRoot + 7), t, eighth * 2.4, 'triangle', 0.55);
-  } else if (inBar === 0 || inBar === 4) {
-    note(c, bus, mtof(bassRoot), t, eighth * 3.5, 'triangle', 1);
-  }
-
-  // Acompañamiento suave: tercera y quinta en los tiempos 2 y 4 de cada compás
-  if (inBar === 2 || inBar === 6) {
-    const third = tr.minor ? 3 : 4;
-    note(c, bus, mtof(chordRoot - 12 + third), t, eighth * 3, 'sine', 0.4);
-    note(c, bus, mtof(chordRoot - 12 + 7), t, eighth * 3, 'sine', 0.4);
+  // Acompañamiento, distinto en cada mundo
+  switch (tr.style) {
+    case 'offbeat': // bajo en 1 y 3; tercera y quinta suaves después
+      if (inBar === 0 || inBar === 4) note(c, bus, mtof(bassRoot), t, e * 3.5, 'triangle', 1);
+      if (inBar === 2 || inBar === 6) {
+        note(c, bus, mtof(chordRoot - 12 + third), t, e * 3, 'sine', 0.4);
+        note(c, bus, mtof(chordRoot - 12 + 7), t, e * 3, 'sine', 0.4);
+      }
+      break;
+    case 'arp': { // arpegio suave del acorde, una nota por corchea
+      if (inBar === 0 || inBar === 4) note(c, bus, mtof(bassRoot), t, e * 3.5, 'triangle', 0.9);
+      const tones = [0, third, 7, 12, 7, third, 0, third];
+      voiceNote(c, bus, 'marimba', mtof(chordRoot - 12 + tones[inBar]), t, e, 0.3);
+      break;
+    }
+    case 'drone': // bordón largo de tónica y quinta
+      if (inBar === 0) {
+        note(c, bus, mtof(bassRoot), t, e * 8, 'sine', 0.9, 0.5);
+        note(c, bus, mtof(bassRoot + 7), t, e * 8, 'sine', 0.45, 0.6);
+      }
+      break;
+    case 'walk': { // bajo que camina en negras + acorde corto a contratiempo
+      if (inBar % 2 === 0) {
+        const walk = [0, third, 7, third];
+        note(c, bus, mtof(bassRoot + walk[(inBar / 2) | 0]), t, e * 1.8, 'triangle', 0.85);
+      }
+      if (inBar === 3 || inBar === 7) voiceNote(c, bus, 'epiano', mtof(chordRoot - 12 + third), t, e, 0.3);
+      break;
+    }
+    case 'pad': // acordes largos que se funden
+      if (inBar === 0 || inBar === 4) {
+        voiceNote(c, bus, 'organ', mtof(chordRoot - 12), t, e, 0.32);
+        voiceNote(c, bus, 'organ', mtof(chordRoot - 12 + third), t, e, 0.25);
+        voiceNote(c, bus, 'organ', mtof(chordRoot - 12 + 7), t, e, 0.25);
+      }
+      break;
+    case 'bounce': // bajo saltarín y destellos de campana
+      if (inBar % 4 === 0) note(c, bus, mtof(bassRoot), t, e * 3.5, 'triangle', 0.9);
+      if (inBar % 4 === 2) note(c, bus, mtof(bassRoot + 7), t, e * 2.4, 'triangle', 0.55);
+      if (inBar % 2 === 1) voiceNote(c, bus, 'bell', mtof(chordRoot + 12 + [0, third, 7][((inBar / 2) | 0) % 3]), t, e, 0.18);
+      break;
   }
 }
 
@@ -375,10 +464,13 @@ export function duckMusic(seconds = 0.7) {
   g.linearRampToValueAtTime(MUSIC_LEVEL, now + seconds + 0.5);
 }
 
-/** Pista que corresponde a lo que se ve en pantalla. */
+/**
+ * Pista que corresponde a lo que se ve en pantalla: cada mundo tiene SU canción, tanto en el
+ * mapa como jugando (así no suena igual para todos); el Gran Final tiene la suya.
+ * `map` queda solo de respaldo si la región no se reconoce.
+ */
 export function trackFor(opts: { finale: boolean; viewMode: 'map' | 'game'; regionId: string }): MusicTrackId {
   if (opts.finale) return 'finale';
-  if (opts.viewMode === 'map') return 'map';
   return opts.regionId in TRACKS && opts.regionId !== 'map' && opts.regionId !== 'finale'
     ? (opts.regionId as MusicTrackId)
     : 'map';

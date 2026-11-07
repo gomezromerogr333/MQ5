@@ -6,8 +6,8 @@ describe('música de fondo', () => {
     for (const [id, t] of Object.entries(TRACKS)) {
       expect(t.melody.length, id).toBe(32);
       expect(t.chords.length, id).toBe(4);
-      expect(t.bpm).toBeGreaterThan(50);
-      expect(t.bpm).toBeLessThan(80);
+      expect(t.bpm).toBeGreaterThan(40);
+      expect(t.bpm).toBeLessThan(90);
     }
   });
 
@@ -18,10 +18,19 @@ describe('música de fondo', () => {
 
   it('elige la pista según lo que se ve', () => {
     expect(trackFor({ finale: true, viewMode: 'game', regionId: 'bosque' })).toBe('finale');
-    expect(trackFor({ finale: false, viewMode: 'map', regionId: 'ciudad' })).toBe('map');
+    // cada mundo suena con SU canción, también en el mapa
+    expect(trackFor({ finale: false, viewMode: 'map', regionId: 'ciudad' })).toBe('ciudad');
+    expect(trackFor({ finale: false, viewMode: 'map', regionId: 'bosque' })).toBe('bosque');
     expect(trackFor({ finale: false, viewMode: 'game', regionId: 'montana' })).toBe('montana');
     expect(trackFor({ finale: false, viewMode: 'game', regionId: 'castillo' })).toBe('castillo');
     expect(trackFor({ finale: false, viewMode: 'game', regionId: 'raro' })).toBe('map');
+  });
+
+  it('cada mundo tiene un instrumento y un acompañamiento propios', () => {
+    const worlds = ['bosque', 'montana', 'ciudad', 'castillo', 'finale'] as const;
+    expect(new Set(worlds.map((w) => TRACKS[w].voice)).size).toBe(5);
+    expect(new Set(worlds.map((w) => TRACKS[w].style)).size).toBe(5);
+    expect(new Set(worlds.map((w) => TRACKS[w].bpm)).size).toBe(5);
   });
 
   it('es muy suave y no falla sin AudioContext (jsdom)', () => {
